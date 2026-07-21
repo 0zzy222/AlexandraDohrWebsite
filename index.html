@@ -221,10 +221,13 @@
   <div class="max-w-7xl mx-auto px-6 lg:px-10 pt-16 pb-20 lg:pt-20 lg:pb-28 grid lg:grid-cols-[1.05fr_0.95fr] gap-14 items-center">
     <div class="reveal">
       <p class="font-semibold text-xs tracking-[0.24em] uppercase text-sage mb-6">Hebamme · Yoga · Cranio-Sacrale-Osteopathie · Ligist</p>
-      <h1 class="font-display text-[2.6rem] leading-[1.08] sm:text-5xl sm:leading-[1.08] lg:text-[3.4rem] lg:leading-[1.06] tracking-tight text-ink">
-        Ich begleite dich mit
-        <span class="italic text-rose-deep">Klarheit und Herz</span>
-        durch die besondere Zeit deiner Schwangerschaft.
+      <h1
+        class="font-display text-[2.6rem] leading-[1.08] sm:text-5xl sm:leading-[1.08] lg:text-[3.4rem] lg:leading-[1.06] tracking-tight text-ink"
+        aria-label="Ich begleite dich mit Klarheit und Herz durch die besondere Zeit deiner Schwangerschaft."
+      >
+        <span id="hero-typewriter" aria-hidden="true">
+          <span id="hero-type-1"></span><span id="hero-type-2" class="italic text-rose-deep"></span><span id="hero-type-3"></span><span id="hero-type-cursor" class="inline-block w-[2px] h-[0.85em] align-middle bg-rose-deep ml-1 animate-pulse" style="animation-duration:1.1s;"></span>
+        </span>
       </h1>
       <p class="mt-7 text-lg leading-[1.7] text-ink/75 max-w-xl">
         Von der ersten Untersuchung über die Geburt bis zum ersten gemeinsamen Yoga mit deinem Baby — für ein Wochenbett, das du selbstbestimmt und voller Vertrauen erlebst.
@@ -247,17 +250,6 @@
       <div class="absolute -inset-6 lg:-inset-10 -z-10 border border-rose/40 blob-alt"></div>
       <div class="blob overflow-hidden shadow-lift relative">
         <img src="hero-video-poster.jpg" alt="Alexandra Dohr bei einer Vinyasa-Yoga-Einheit am Strand in der Abenddämmerung" class="w-full h-full object-cover" />
-        <video
-          id="hero-video"
-          class="absolute inset-0 w-full h-full object-cover opacity-0"
-          style="transition: opacity 0.8s ease;"
-          muted
-          loop
-          playsinline
-          preload="none"
-          aria-hidden="true"
-          tabindex="-1"
-        ></video>
       </div>
       <div class="absolute -bottom-6 -left-6 sm:-bottom-8 sm:-left-8 bg-paper rounded-3xl shadow-soft border border-line px-6 py-5 max-w-[15rem]">
         <p class="font-display italic text-rose-deep text-lg leading-snug">„Für ein Wochenbett voller Vertrauen.“</p>
@@ -698,19 +690,46 @@
     });
   }
 
-  // hero video: only load/play on larger screens and when motion is welcome;
-  // mobile and prefers-reduced-motion visitors just see the still frame
-  const heroVideo = document.getElementById('hero-video');
-  if (heroVideo) {
-    const canAutoplay =
-      window.matchMedia('(min-width: 768px)').matches &&
-      !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (canAutoplay) {
-      heroVideo.addEventListener('canplay', () => { heroVideo.style.opacity = '1'; }, { once: true });
-      heroVideo.src = 'MamaViedo.mp4';
-      heroVideo.play().catch(() => {});
+  // hero headline: typewriter effect, respects prefers-reduced-motion
+  (function () {
+    const seg1 = document.getElementById('hero-type-1');
+    const seg2 = document.getElementById('hero-type-2');
+    const seg3 = document.getElementById('hero-type-3');
+    const cursorEl = document.getElementById('hero-type-cursor');
+    if (!seg1 || !seg2 || !seg3) return;
+
+    const parts = [
+      { el: seg1, text: 'Ich begleite dich mit ' },
+      { el: seg2, text: 'Klarheit und Herz' },
+      { el: seg3, text: ' durch die besondere Zeit deiner Schwangerschaft.' },
+    ];
+
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      parts.forEach((p) => { p.el.textContent = p.text; });
+      if (cursorEl) cursorEl.style.display = 'none';
+      return;
     }
-  }
+
+    const speed = 28; // ms per character
+    let partIndex = 0;
+    let charIndex = 0;
+
+    function typeNext() {
+      if (partIndex >= parts.length) return;
+      const { el, text } = parts[partIndex];
+      if (charIndex < text.length) {
+        el.textContent += text.charAt(charIndex);
+        charIndex += 1;
+        setTimeout(typeNext, speed);
+      } else {
+        partIndex += 1;
+        charIndex = 0;
+        setTimeout(typeNext, speed);
+      }
+    }
+
+    setTimeout(typeNext, 350);
+  })();
 
   // testimonials: stacked photo carousel
   const testimonialStack = document.getElementById('testimonial-stack');
