@@ -225,11 +225,8 @@
           <span id="hero-type-1"></span><span id="hero-type-2" class="italic text-rose-deep"></span><span id="hero-type-3"></span><span id="hero-type-cursor" class="inline-block w-[2px] h-[0.85em] align-middle bg-rose-deep ml-1 animate-pulse" style="animation-duration:1.1s;"></span>
         </span>
       </h1>
-      <p
-        class="mt-7 text-lg leading-[1.7] text-ink/75 max-w-xl"
-        aria-label="Ich begleite dich mit fachlicher Kompetenz, Ruhe und Herz durch Schwangerschaft, Geburt und Wochenbett. Mein Ziel ist es, dass du dich in dieser besonderen Zeit sicher, verstanden und gestärkt fühlst – damit du voller Vertrauen in deinen neuen Lebensabschnitt als Mutter starten kannst."
-      >
-        <span aria-hidden="true"><span id="hero-sub-type"></span><span id="hero-sub-cursor" class="inline-block w-[2px] h-[0.85em] align-middle bg-ink/50 ml-1 animate-pulse" style="animation-duration:1.1s;"></span></span>
+      <p class="mt-7 text-lg leading-[1.7] text-ink/75 max-w-xl">
+        Ich begleite dich mit fachlicher Kompetenz, Ruhe und Herz durch Schwangerschaft, Geburt und Wochenbett. Mein Ziel ist es, dass du dich in dieser besonderen Zeit sicher, verstanden und gestärkt fühlst – damit du voller Vertrauen in deinen neuen Lebensabschnitt als Mutter starten kannst.
       </p>
 
       <div class="mt-9 flex flex-wrap gap-4">
@@ -679,7 +676,7 @@
     });
   }
 
-  // hero headline + subline: typewriter effect, respects prefers-reduced-motion
+  // hero headline: typewriter effect, respects prefers-reduced-motion
   (function () {
     function typeSequence(parts, speed, onDone) {
       let partIndex = 0;
@@ -722,39 +719,20 @@
       { el: h1seg3, text: '.' },
     ] : [];
 
-    const subEl = document.getElementById('hero-sub-type');
-    const subCursor = document.getElementById('hero-sub-cursor');
-    const subText = 'Ich begleite dich mit fachlicher Kompetenz, Ruhe und Herz durch Schwangerschaft, Geburt und Wochenbett. Mein Ziel ist es, dass du dich in dieser besonderen Zeit sicher, verstanden und gestärkt fühlst – damit du voller Vertrauen in deinen neuen Lebensabschnitt als Mutter starten kannst.';
-
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
       headlineParts.forEach((p) => { p.el.textContent = p.text; });
       if (h1cursor) h1cursor.style.display = 'none';
-      if (subEl) subEl.textContent = subText;
-      if (subCursor) subCursor.style.display = 'none';
       return;
     }
 
     const speed = 28; // ms per character, headline
-    const subSpeed = 14; // ms per character, subline (longer text, faster pace)
-
-    function startSub() {
-      if (!subEl) return;
-      setTimeout(() => {
-        typeSequence([{ el: subEl, text: subText }], subSpeed, () => {
-          fadeOutCursor(subCursor);
-        });
-      }, 250);
-    }
 
     if (headlineParts.length) {
       setTimeout(() => {
         typeSequence(headlineParts, speed, () => {
           fadeOutCursor(h1cursor);
-          startSub();
         });
       }, 350);
-    } else {
-      startSub();
     }
   })();
 
